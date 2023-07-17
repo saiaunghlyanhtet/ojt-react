@@ -1,0 +1,64 @@
+.teamsetting-main {
+    margin-top: 35px;
+  }
+  
+  .teamsetting-box {
+    border: 1px solid #000;
+    height: 400px;
+    width: 250px;
+  }
+  
+  .teamsetting-btn {
+    background-color: #1677ff;
+    padding: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .teamsetting-btn:hover {
+    background-color: #1677ffcd;
+  }
+  
+  .teamsetting-box-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .teamsetting-btn-main {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+  .teamsetting-search {
+    margin-left: 50px;
+  }
+  
+  .teamsetting-user {
+    cursor: pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    user-select: none;
+  }
+  
+  .teamsetting-user:hover {
+    background-color: #eee;
+  }
+  
+  .teamsetting-user div {
+    margin-left: 10px;
+  }
+  
+  .center-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  .margin-bottom {
+    margin-bottom: 16px;
+  }
+  
+  
