@@ -4,7 +4,7 @@ import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
 import styles from "../../styles/TeamManagmenet.module.css";
 import TeamManagementModal from './TeamManagementModal';
-import { getAllUsers, updateUser } from '../../api/api-test';
+import { getAllUsers, updateUser, getAllTeams } from '../../api/api-test';
 import { Messages } from "../../data/message";
 
 const { Option } = Select;
@@ -16,8 +16,23 @@ const TeamManage = () => {
   const [selectedTeam, setSelectedTeam] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [loading] = useState(false);
+  const [teamList, setTeamList] = useState([]);
+
+  useEffect(() => {
+    fetchTeamList()
+  }, []);
+
+  const fetchTeamList =  async () => {
+    try {
+      const response = await getAllTeams();
+            setTeamList(response);
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+  
 
   useEffect(() => {
     fetchUsers();
@@ -44,21 +59,22 @@ const TeamManage = () => {
   const handleModalClose = (selectedTeamsData) => {
     console.log("selectedTeamsData:", selectedTeamsData);
     console.log("Is selectedTeamsData null?", selectedTeamsData === null);
-    if (selectedTeamsData.length !== 0) {
+    
+    if (selectedTeamsData === null || selectedTeamsData.length === 0 || selectedTeamsData.some(teamData => teamData === 'なし')) {
+      const updatedUsers = users.filter((user) => !user.team);
+      setFilteredUsers(updatedUsers);
+    } else {
       console.log(selectedTeamsData);
-      console.log(users);
       const updatedUsers = users.filter((user) =>
         selectedTeamsData.some((teamData) => teamData === user.team)
       );
       setFilteredUsers(updatedUsers);
       console.log(updatedUsers);
-      handleOk()
-    } else {
-      console.log(selectedTeamsData);
-      setFilteredUsers(users)
-      handleOk()
     }
+  
+    handleOk();
   };
+  
 
   const handleChooseUser = (userId) => {
     const updatedUsers = filteredUsers.map((user) => {
@@ -127,13 +143,16 @@ const TeamManage = () => {
         }
         console.log(userData);
         await updateUser(userData._id, newUser);
-        fetchUsers();
-        setSelectedUsers([]);
+        
 
       });
 
       await Promise.all(updatePromises);
       message.success(Messages.M008);
+
+      fetchUsers();
+        setSelectedUsers([]);
+        setSelectedTeam('');
     } catch (error) {
       // Handle error if any update operation fails
       console.error(error);
@@ -178,9 +197,13 @@ const TeamManage = () => {
                 style={{ width: 200 }}
               >
                 <Option value="">None</Option>
-                <Option value="Team A">Team A</Option>
-                <Option value="Team B">Team B</Option>
-                <Option value="Team C">Team C</Option>
+                {teamList && (
+                  teamList.map((team) => (
+                                      <Option key={team._id} value={team.teamName}>
+                                        {team.teamName}
+                                      </Option>
+                                    ))
+                )}
               </Select>
             </Col>
           </Row>

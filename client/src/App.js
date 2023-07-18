@@ -4,13 +4,11 @@ import UserManagement from "./pages/UserManagment/UserManagement";
 import TeamManage from "./pages/UserTeamManagment/TeamManage";
 import Menu from "./pages/Menu/Menu";
 import { AuthContext } from "./utils/AuthContext"; // Update the path to the AuthContext file
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import UserSearch from "./pages/UserSearch/UserSearch";
 
 function App() {
   const [userInfo, setUserInfo] = useState(null);
-  
-
-  
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem("userInfo");
@@ -40,6 +38,7 @@ function App() {
           <Route path="/usermanagement" element={<UserManagement />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/team-management" element={<TeamManage />} />
+          <Route path="/user-search" element={<UserSearch/>} />
         </Routes>
       </AuthContext.Provider>
     </Router>

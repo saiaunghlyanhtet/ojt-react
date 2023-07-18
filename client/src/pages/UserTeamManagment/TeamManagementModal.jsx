@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Table, Button, Pagination, Input, Checkbox } from 'antd';
-import { getAllTeams} from '../../api/api'
+import { Modal, Table, Button, Pagination, Input, Checkbox, Row, Col } from 'antd';
+import { getAllTeams } from '../../api/api';
+import styles from '../../styles/TeamManagmenet.module.css';
 
 const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState('');
   const [selectedTeams, setSelectedTeams] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   useEffect(() => {
     fetchTeams();
@@ -38,6 +41,10 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
     setCurrentPage(1);
   };
 
+  const clearErrorMessage = () => {
+    setErrorMessage('');
+  };
+
   const handleCheckboxChange = (e, teamName) => {
     const { checked } = e.target;
 
@@ -48,23 +55,35 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
         prevSelectedTeams.filter((name) => name !== teamName)
       );
     }
+
+    clearErrorMessage();
   };
 
   const renderData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentData = filteredData.slice(startIndex, endIndex);
-  
-    return currentData.map((team, index) => ({
-      key: index,
-      teamName: team.teamName,
-      index: startIndex + index + 1, // Add the index as a separate property
-    }));
+
+    
+    const tableData = [
+      {
+        key: 'none',
+        teamName: 'なし',
+        index: 1,
+      },
+      ...currentData.map((team, index) => ({
+        key: index + 2,
+        teamName: team.teamName,
+        index: startIndex + index + 2,
+      })),
+    ];
+
+    return tableData;
   };
 
   const columns = [
     {
-      title: 'Number of Team Members',
+      title: '番号',
       dataIndex: 'index',
       key: 'index',
       render: (text, record) => (
@@ -77,39 +96,46 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
       ),
     },
     {
-      title: 'Team Name',
+      title: 'チーム名',
       dataIndex: 'teamName',
       key: 'teamName',
     },
   ];
 
   const handleSearchClick = () => {
-    onCloseModal(selectedTeams);
-    
+    if (selectedTeams.length > 0) {
+      onCloseModal(selectedTeams);
+    } else {
+      setErrorMessage('Please check at least one checkbox');
+    }
   };
 
   return (
-    <Modal open={isOpen} onCancel={closeModal} footer={null}>
+    <Modal open={isOpen} onCancel={closeModal} footer={null} title="チーム名検索">
       <div className="modal-content">
-        <h2>Data List</h2>
-        <div className="search-container">
-          <Input
-            placeholder="Search"
-            value={searchText}
-            onChange={(e) => handleSearch(e)}
-          />
+        <div className={styles['search-container']}>
+          <label htmlFor="">チーム名</label>
+          <div className={styles['input-container']}>
+            <Input placeholder="Search" value={searchText} onChange={(e) => handleSearch(e)} />
+          </div>
         </div>
         <Table dataSource={renderData()} columns={columns} pagination={false} />
-        <div className="pagination">
-          <Pagination
-            current={currentPage}
-            total={filteredData.length}
-            pageSize={itemsPerPage}
-            onChange={handlePageChange}
-          />
+        <Row className={styles['margin-top']}>
+          <Col span={6} offset={18}>
+            <div className="pagination">
+              <Pagination
+                current={currentPage}
+                total={filteredData.length}
+                pageSize={itemsPerPage}
+                onChange={handlePageChange}
+              />
+            </div>
+          </Col>
+        </Row>
+        {errorMessage && <p className={styles['error-message']}>{errorMessage}</p>}
+        <div className={styles['center-button']}>
+          <Button onClick={handleSearchClick}>Search</Button>
         </div>
-        <Button onClick={handleSearchClick}>Search</Button>
-        <Button onClick={closeModal}>Close</Button>
       </div>
     </Modal>
   );

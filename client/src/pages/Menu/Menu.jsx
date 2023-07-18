@@ -72,6 +72,7 @@ const Menu = () => {
                 チーム設定
               </Button>
             )}
+            <Link to='/user-search'>
             <Button
               style={{ height: "70px", width: "350px" }}
               type="primary"
@@ -79,6 +80,7 @@ const Menu = () => {
             >
               ユーザー検索
             </Button>
+            </Link>
           </Space>
         </div>
       </div>

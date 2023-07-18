@@ -7,7 +7,7 @@ import { AuthContext } from "../../utils/AuthContext";
 import { useNavigate } from "react-router-dom";
 import UserManagementTable from "./UserManagementTable2";
 
-const UserManagement = ({ loginUserEmail }) => {
+const UserManagement = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm(); // Create a form instance

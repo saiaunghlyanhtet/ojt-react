@@ -72,7 +72,7 @@ const deleteUser = async (userId, userData) => {
 };
 
 const TEAM_API_URL =
-  "https://crudcrud.com/api/16d2e1d85c194eec8bc733ed84370a56";
+  "https://crudcrud.com/api/0cc810d624454bc394f22f56e54a2d22";
 // Get all teams
 const getAllTeams = async () => {
   try {

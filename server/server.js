@@ -12,7 +12,7 @@ app.post("/api/users", async (req, res) => {
   try {
     const newUser = req.body;
 
-    // Make API call to the external service to create a user
+    
     const response = await axios.post(
       "https://crudcrud.com/api/08b2782a3f5d441ebadde01f557b89c1/user",
       newUser

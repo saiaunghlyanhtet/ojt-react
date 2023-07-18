@@ -36,3 +36,17 @@ export const getAllUsers = async () => {
     throw new Error("Failed to fetch users");
   }
 };
+
+const TEAM_API_URL =
+  "https://crudcrud.com/api/0cc810d624454bc394f22f56e54a2d22";
+// Get all teams
+export const getAllTeams = async () => {
+  try {
+    const response = await fetch(`${TEAM_API_URL}/teams`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    
+    console.error("Error getting teams:", error);
+  }
+};
