@@ -2,6 +2,7 @@ import axios from "axios";
 
 const baseURL = "http://localhost:3001/api";
 
+// pass a user object to create a new user and return response object
 export const createUser = async (newUser) => {
   try {
     const response = await axios.post(`${baseURL}/users`, newUser);
@@ -11,6 +12,7 @@ export const createUser = async (newUser) => {
   }
 };
 
+// pass the user id and updated user information to update the existing user and return the response object
 export const updateUser = async (userId, updatedUser) => {
   try {
     const response = await axios.put(`${baseURL}/users/${userId}`, updatedUser);
@@ -20,6 +22,7 @@ export const updateUser = async (userId, updatedUser) => {
   }
 };
 
+// get the user by passing the user id
 export const getUserById = async (userId) => {
   try {
     const response = await axios.get(`${baseURL}/users/${userId}`);
@@ -30,6 +33,7 @@ export const getUserById = async (userId) => {
   }
 };
 
+// pass the user id to delete the user
 export const deleteUser = async (userId) => {
   try {
     await axios.delete(`${baseURL}/users/${userId}`);
@@ -38,6 +42,7 @@ export const deleteUser = async (userId) => {
   }
 };
 
+// get all users
 export const getAllUsers = async () => {
   try {
     const response = await axios.get(`${baseURL}/users`);
@@ -48,7 +53,7 @@ export const getAllUsers = async () => {
 };
 
 const TEAM_API_URL =
-  "https://crudcrud.com/api/68441e8165c24f6ca0d19a2b689665eb";
+  "https://crudcrud.com/api/75ee40d140144734bed70ce2077830c8";
 // Get all teams
 export const getAllTeams = async () => {
   try {

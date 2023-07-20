@@ -281,7 +281,7 @@ const TeamManage = () => {
               onClick={handleUpdateUsers}
               disabled={!selectedTeam || selectedUsers.length === 0}
             >
-              Update Users
+             決 定
             </Button>
           </div>
         </div>

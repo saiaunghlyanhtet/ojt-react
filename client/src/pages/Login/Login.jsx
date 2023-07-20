@@ -19,6 +19,7 @@ const Login = () => {
     fetchUsers();
   }, []);
 
+  // get all users
   const fetchUsers = async () => {
     try {
       const users = await getAllUsers();
@@ -48,11 +49,8 @@ const Login = () => {
 
   const handleSubmit = (values) => {
     const { username } = values;
-    console.log("username", username);
-
     // Find the user in the filtered data
     const user = findUserByName(users, username);
-    console.log("userlevel", user);
 
     if (
       user &&

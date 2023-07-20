@@ -1,29 +1,8 @@
 import React from "react";
 import styles from "../../styles/UserSearch.module.css";
 import { Table } from "antd";
-import { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../../utils/AuthContext";
-import { getUserById } from "../../api/api-test";
 
-const UserSearchtable = ({ loading, data}) => {
-  const {userInfo} = useContext(AuthContext);
-  const [loginUser, setLoginUser] = useState([])
-console.log(userInfo);
-  useEffect(() => {
-    fetchLoginUserData()
-  }, [loginUser, userInfo])
-
-  console.log("login user", loginUser);
-
-  const fetchLoginUserData = async () => {
-    try {
-      const response = await getUserById(userInfo.user_id);
-            setLoginUser([response]);
-    } catch (error) {
-      console.log(error);
-    }
-    }
-  
+const UserSearchtable = ({ loading, data, loginUser }) => {
   const columns = [
     {
       title: "番号",
@@ -61,20 +40,20 @@ console.log(userInfo);
       sortDirections: ["ascend", "descend"],
     },
   ];
+
   const paginationConfig = {
     pageSize: 10,
   };
 
   // Filter data based on del_flg property
   const filteredData = data?.filter((user) => user.del_flg === "0");
-  console.log("filterdatattt", filteredData);
-  console.log("loginuser", loginUser);
+
   return (
     <>
-      {userInfo.user_level === "member" ? (
+      {loginUser?.user_level === "member" ? (
         <Table
           columns={columns}
-          dataSource={loginUser}
+          dataSource={loginUser ? [loginUser] : []}
           loading={loading}
           pagination={paginationConfig}
           className={styles.table}

@@ -134,7 +134,7 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
         </Row>
         {errorMessage && <p className={styles['error-message']}>{errorMessage}</p>}
         <div className={styles['center-button']}>
-          <Button onClick={handleSearchClick}>Search</Button>
+          <Button onClick={handleSearchClick}>追加</Button>
         </div>
       </div>
     </Modal>

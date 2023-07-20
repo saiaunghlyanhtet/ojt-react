@@ -2,11 +2,11 @@ import React, { useContext, useEffect } from "react";
 import { Button, Space } from "antd";
 import { Link } from "react-router-dom";
 import styles from "../../styles/Menu.module.css";
-import { AuthContext } from "../../utils/AuthContext"; // Update the path to the AuthContext file
+import { AuthContext } from "../../utils/AuthContext"; 
 import { useNavigate } from "react-router-dom";
 
 const Menu = () => {
-  const { userInfo } = useContext(AuthContext); // Access the userInformation value from the AuthContext
+  const { userInfo } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -15,7 +15,7 @@ import {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const paginationConfig = {
-    pageSize: 6,
+    pageSize: 5,
 };
 
 const UserManagementTable = ({ data, loading, fetchUsers }) => {
@@ -196,7 +196,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
         {
             title: "番号",
             dataIndex: "_id",
-            key: "id",
+            key: "_id",
             render: (_, record, index) => {
                 const { current = 1, pageSize = 10 } = pagination;
                 const currentRow = (current - 1) * pageSize + index + 1;

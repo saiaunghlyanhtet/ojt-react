@@ -2,12 +2,15 @@ import { message } from "antd";
 import { deleteUser } from "../api/api-test";
 import { Messages } from "../data/message";
 
+// search user information based on data and search text
 export const searchData = (data, searchText) => {
   return data.filter((user) =>
     user.email.toLowerCase().includes(searchText.toLowerCase())
   );
 };
 
+// pass form, all user data, and user id to get specific user information and 
+// populate that information with the form
 export const handleEditUser = async (form, data, userId) => {
   try {
     const selectedUser = data.find((user) => user._id === userId);
@@ -25,6 +28,8 @@ export const handleEditUser = async (form, data, userId) => {
   }
 };
 
+// pass form, user data, user id, user info, and fetch user callback function and 
+// delete user based on parameters passed in.
 export const handleDeleteUser = async (
   form,
   data,

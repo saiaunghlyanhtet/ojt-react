@@ -6,6 +6,7 @@
     border: 1px solid #000;
     height: 400px;
     width: 250px;
+    overflow-y: scroll;
   }
   
   .teamsetting-btn {
