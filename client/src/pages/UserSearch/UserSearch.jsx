@@ -1,19 +1,36 @@
-import React, { useEffect, useState,useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "../../styles/UserSearch.module.css";
 import UserSearchtable from "./UserSearchtable";
-import { getAllUsers } from "../../api/api-test";
+import { getAllUsers, getUserById } from "../../api/api-test";
 import { Button, Form, Input, Select } from "antd";
-import { AuthContext } from "../../utils/AuthContext"
+import { AuthContext } from "../../utils/AuthContext";
 
-const UserSearch = ({ loginUser }) => {
+
+const UserSearch = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filteredData, setFilteredData] = useState([]); // New state for filtered data
-  const {userInfo} = useContext(AuthContext)
+  const [filteredData, setFilteredData] = useState([]);
+  const { userInfo } = useContext(AuthContext);
+  const [loginUser, setLoginUser] = useState(null); // Changed to null
 
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    if (userInfo && userInfo.user_id) {
+      fetchLoginUserData();
+    }
+  }, [userInfo]);
+
+  const fetchLoginUserData = async () => {
+    try {
+      const response = await getUserById(userInfo.user_id);
+      setLoginUser(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -30,7 +47,7 @@ const UserSearch = ({ loginUser }) => {
   const handleSearch = (values) => {
     const { firstName, lastName, email, role, team } = values;
 
-    let newData = [...userData]; // Create a copy of userData array
+    let newData = [...userData];
 
     if (team === "All") {
       newData = newData.filter((user) => {
@@ -42,7 +59,7 @@ const UserSearch = ({ loginUser }) => {
           : true;
         const emailMatch = email ? user.email.includes(email) : true;
         const roleMatch = role ? user.user_level === role : true;
-        const delFlgMatch = user.del_flg === "0"; // Check if del_flg is "0"
+        const delFlgMatch = user.del_flg === "0";
         return (
           firstNameMatch &&
           lastNameMatch &&
@@ -61,8 +78,8 @@ const UserSearch = ({ loginUser }) => {
           : true;
         const emailMatch = email ? user.email.includes(email) : true;
         const roleMatch = role ? user.user_level === role : true;
-        const teamMatch = team ? user.team_name === team : true;
-        const delFlgMatch = user.del_flg === "0"; // Check if del_flg is "0"
+        const teamMatch = team ? user.team === team : true;
+        const delFlgMatch = user.del_flg === "0";
         return (
           firstNameMatch &&
           lastNameMatch &&
@@ -74,8 +91,10 @@ const UserSearch = ({ loginUser }) => {
       });
     }
 
-    setFilteredData(newData); // Update the filteredData state
+    setFilteredData(newData);
+    console.log(newData);
   };
+
   return (
     <div className={styles["usermanagement-form-main"]}>
       <div className={styles["usermanagement-form-container"]}>
@@ -86,51 +105,115 @@ const UserSearch = ({ loginUser }) => {
         >
           <Form.Item label="ユーザー名[姓]" name="firstName">
             <Input
-              disabled={userInfo.user_level === "member"}
+              disabled={loginUser?.user_level === "member"}
+              defaultValue={
+                loginUser?.user_level === "member" ? loginUser?.user_name : ""
+              }
               className={styles["usermanagement-input"]}
-            />
-          </Form.Item>
-          <Form.Item label="ユーザー名[名]" name="lastName">
-            <Input
-              disabled={userInfo.user_level === "member"}
-              className={styles["usermanagement-input"]}
-            />
-          </Form.Item>
-          <Form.Item label="メールアドレス" name="email">
-            <Input
-              className={styles["usermanagement-input"]}
-              disabled={userInfo.user_level === "member"}
             />
           </Form.Item>
 
-          <Form.Item label="ユーザー権限" name="role">
-            <Select
+          <Form.Item label="ユーザー名[名]" name="lastName">
+            <Input
+              disabled={loginUser?.user_level === "member"}
+              defaultValue={
+                loginUser?.user_level === "member"
+                  ? loginUser?.user_name_last
+                  : ""
+              }
               className={styles["usermanagement-input"]}
-              options={[
-                { value: "admin", label: "Admin" },
-                { value: "super admin", label: "Super Admin" },
-                { value: "member", label: "Member" },
-              ]}
-              disabled={userInfo.user_level === "member"}
-              
             />
           </Form.Item>
-          <Form.Item label="チーム名：" name="team">
-            <Select
+
+          <Form.Item label="メールアドレス" name="email">
+
+            <Input
+
               className={styles["usermanagement-input"]}
-              options={[
-                { value: "All", label: "All" },
-                { value: "A", label: "A" },
-                { value: "B", label: "B" },
-                { value: "C", label: "C" },
-              ]}
-              disabled={userInfo.user_level === "member"}
-              
+
+              disabled={loginUser?.user_level === "member"}
+
+              defaultValue={
+
+                loginUser?.user_level === "member" ? loginUser?.email : ""
+
+              }
+
             />
+
+          </Form.Item>
+
+
+
+
+          <Form.Item label="ユーザー権限" name="role">
+
+            <Select
+
+              className={styles["usermanagement-input"]}
+
+              options={[
+
+                { value: "admin", label: "Admin" },
+
+                { value: "super admin", label: "Super Admin" },
+
+                { value: "member", label: "Member" },
+
+              ]}
+
+              disabled={loginUser?.user_level === "member"}
+
+              defaultValue={
+
+                loginUser?.user_level === "member"
+
+                  ? loginUser?.user_level
+
+                  : undefined
+
+              }
+
+            />
+
+          </Form.Item>
+
+          <Form.Item label="チーム名：" name="team">
+
+            <Select
+
+              className={styles["usermanagement-input"]}
+
+              options={[
+
+                { value: "All", label: "All" },
+
+                { value: "Team A", label: "A" },
+
+                { value: "Team B", label: "B" },
+
+                { value: "Team C", label: "C" },
+
+              ]}
+
+              disabled={loginUser?.user_level === "member"}
+
+              defaultValue={
+
+                loginUser?.user_level === "member"
+
+                  ? loginUser?.team
+
+                  : undefined
+
+              }
+
+            />
+
           </Form.Item>
 
           <Form.Item className={styles["usermanagement-form-button-container"]}>
-            {userInfo.user_level === "member" ? (
+            {loginUser?.user_level === "member" ? (
               <Button type="primary" disabled>
                 検索
               </Button>
@@ -144,10 +227,8 @@ const UserSearch = ({ loginUser }) => {
       </div>
       <div className={styles["usermanagement-table-main"]}>
         <UserSearchtable
-          loginUser={loginUser}
-          data={filteredData} // Use the filteredData state as the data source
+          data={filteredData.length > 0 ? filteredData : userData}
           loading={loading}
-          fetchUsers={fetchUsers}
         />
       </div>
     </div>

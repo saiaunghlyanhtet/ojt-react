@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:3001/api"; // Update with the appropriate URL of your Express backend
+const baseURL = "http://localhost:3001/api";
 
 export const createUser = async (newUser) => {
   try {
@@ -17,6 +17,16 @@ export const updateUser = async (userId, updatedUser) => {
     return response.data;
   } catch (error) {
     throw new Error("Failed to update user");
+  }
+};
+
+export const getUserById = async (userId) => {
+  try {
+    const response = await axios.get(`${baseURL}/users/${userId}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to get user");
   }
 };
 
@@ -38,7 +48,7 @@ export const getAllUsers = async () => {
 };
 
 const TEAM_API_URL =
-  "https://crudcrud.com/api/0cc810d624454bc394f22f56e54a2d22";
+  "https://crudcrud.com/api/68441e8165c24f6ca0d19a2b689665eb";
 // Get all teams
 export const getAllTeams = async () => {
   try {

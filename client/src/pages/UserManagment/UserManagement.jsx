@@ -20,12 +20,12 @@ const UserManagement = () => {
   useEffect(() => {
     if (!userInfo) {
       navigate("/");
+    } else {
+      fetchUsers();
     }
   }, [userInfo, navigate]);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  
 
   const fetchUsers = async () => {
     try {

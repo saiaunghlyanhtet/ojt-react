@@ -3,10 +3,26 @@ import styles from "../../styles/UserSearch.module.css";
 import { Table } from "antd";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../utils/AuthContext";
+import { getUserById } from "../../api/api-test";
 
-const UserSearchtable = ({ loading, data, loginUser }) => {
+const UserSearchtable = ({ loading, data}) => {
   const {userInfo} = useContext(AuthContext);
-  const [users, setUsers] = useState([]);
+  const [loginUser, setLoginUser] = useState([])
+console.log(userInfo);
+  useEffect(() => {
+    fetchLoginUserData()
+  }, [loginUser, userInfo])
+
+  console.log("login user", loginUser);
+
+  const fetchLoginUserData = async () => {
+    try {
+      const response = await getUserById(userInfo.user_id);
+            setLoginUser([response]);
+    } catch (error) {
+      console.log(error);
+    }
+    }
   
   const columns = [
     {
@@ -39,9 +55,9 @@ const UserSearchtable = ({ loading, data, loginUser }) => {
     },
     {
       title: "チーム名",
-      dataIndex: "team_name",
+      dataIndex: "team",
       key: "team",
-      sorter: (a, b) => a.team_name.localeCompare(b.team_name),
+      sorter: (a, b) => a.team.localeCompare(b.team),
       sortDirections: ["ascend", "descend"],
     },
   ];

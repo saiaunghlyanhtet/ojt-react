@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Messages } from "../../data/message";
 import styles from "../../styles/Login.module.css";
 import { getAllUsers } from "../../api/api-test";
-import { AuthContext } from "../../utils/AuthContext"; // Update the path to the AuthContext file
+import { AuthContext } from "../../utils/AuthContext";
 
 const Login = () => {
   const [userData, setUserData] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const { handleLogin } = useContext(AuthContext)
+  const { handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,24 +29,29 @@ const Login = () => {
   };
 
   const filteredData = userData?.filter((user) => user.del_flg === "0");
-  console.log("filterdData", filteredData);
-  const users = filteredData?.filter(
-    (user) =>
-      user.user_level === "admin" ||
-      user.user_level === "super admin" ||
-      user.user_level === "member"
-  );
-  console.log("users", users);
+
+  const users = useMemo(() => {
+    return filteredData?.filter(
+      (user) =>
+        user.user_level === "admin" ||
+        user.user_level === "super admin" ||
+        user.user_level === "member"
+    );
+  }, [filteredData]);
+
+  const findUserByName = (usersArray, name) => {
+    return usersArray.find((user) => {
+      const fullName = `${user.user_name} ${user.user_name_last}`;
+      return fullName === name;
+    });
+  };
 
   const handleSubmit = (values) => {
     const { username } = values;
     console.log("username", username);
 
     // Find the user in the filtered data
-    const user = users.find((user) => {
-      const fullName = `${user.user_name} ${user.user_name_last}`;
-      return fullName === username;
-    });
+    const user = findUserByName(users, username);
     console.log("userlevel", user);
 
     if (
@@ -55,9 +60,8 @@ const Login = () => {
         user.user_level === "super admin" ||
         user.user_level === "member")
     ) {
-
-      const userInformation = { user_level: user.user_level, user_id: user._id }
-      handleLogin(userInformation)
+      const userInformation = { user_level: user.user_level, user_id: user._id };
+      handleLogin(userInformation);
 
       navigate("/menu");
       console.log("login succ");
@@ -66,8 +70,6 @@ const Login = () => {
       // Clear input fields
       setUsername("");
       setPassword("");
-
-
     } else {
       setMessage("ユーザー名とパスワードが間違っています。");
     }

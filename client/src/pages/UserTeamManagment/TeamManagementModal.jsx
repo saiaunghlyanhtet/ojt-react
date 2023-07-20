@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Table, Button, Pagination, Input, Checkbox, Row, Col } from 'antd';
-import { getAllTeams } from '../../api/api';
+import { getAllTeams } from '../../api/api-test';
 import styles from '../../styles/TeamManagmenet.module.css';
 
 const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {

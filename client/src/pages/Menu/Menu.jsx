@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const Menu = () => {
   const { userInfo } = useContext(AuthContext); // Access the userInformation value from the AuthContext
   const navigate = useNavigate();
-  console.log(userInfo);
 
   useEffect(() => {
     if (!userInfo) {

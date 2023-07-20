@@ -7,6 +7,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+const API_URL = 'https://crudcrud.com/api/64e0a2cdd3f04d20a5ad67c2757f33fa'
+
 // Create users
 app.post("/api/users", async (req, res) => {
   try {
@@ -14,7 +16,7 @@ app.post("/api/users", async (req, res) => {
 
     
     const response = await axios.post(
-      "https://crudcrud.com/api/08b2782a3f5d441ebadde01f557b89c1/user",
+      `${API_URL}/user`,
       newUser
     );
     const createdUser = response.data;
@@ -34,11 +36,28 @@ app.put("/api/users/:id", async (req, res) => {
 
     // Make API call to the external service to update the user
     await axios.put(
-      `https://crudcrud.com/api/08b2782a3f5d441ebadde01f557b89c1/user/${userId}`,
+      `${API_URL}/user/${userId}`,
       updatedUser
     );
 
     res.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: "Failed to update user" });
+  }
+});
+
+// Update a user
+app.get("/api/users/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Make API call to the external service to get the user
+    const response = await axios.get(
+      `${API_URL}/user/${userId}`
+    );
+
+    res.json(response.data);
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ error: "Failed to update user" });
@@ -52,7 +71,7 @@ app.delete("/api/users/:id", async (req, res) => {
 
     // Make API call to the external service to delete the user
     await axios.delete(
-      `https://crudcrud.com/api/08b2782a3f5d441ebadde01f557b89c1/user/${userId}`
+      `${API_URL}/user/${userId}`
     );
 
     res.sendStatus(204);
@@ -67,7 +86,7 @@ app.get("/api/users", async (req, res) => {
   try {
     // Make API call to the external service to get all users
     const response = await axios.get(
-      "https://crudcrud.com/api/08b2782a3f5d441ebadde01f557b89c1/user"
+      `${API_URL}/user`
     );
     const users = response.data;
 

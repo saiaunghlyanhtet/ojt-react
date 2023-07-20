@@ -282,6 +282,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                     >
                         <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                             <Form.Item
+                                
                                 label="ユーザー名[姓]"
                                 name="firstName"
                                 rules={[{ required: true, message: Messages.M013 }]}

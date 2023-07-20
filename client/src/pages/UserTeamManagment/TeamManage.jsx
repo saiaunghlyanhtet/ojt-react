@@ -18,25 +18,24 @@ const TeamManage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading] = useState(false);
   const [teamList, setTeamList] = useState([]);
+  const [isDataFetched, setIsDataFetched] = useState(false);
 
   useEffect(() => {
-    fetchTeamList()
-  }, []);
+    if (!isDataFetched) {
+      fetchTeamList();
+      fetchUsers();
+      setIsDataFetched(true);
+    }
+  }, [isDataFetched]);
 
-  const fetchTeamList =  async () => {
+  const fetchTeamList = async () => {
     try {
       const response = await getAllTeams();
-            setTeamList(response);
+      setTeamList(response);
     } catch (error) {
       console.log(error);
     }
-
-  }
-  
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  };
 
   const fetchUsers = async () => {
     try {
@@ -47,6 +46,7 @@ const TeamManage = () => {
     }
   };
 
+
   const handleModal = () => {
     setIsOpen(true);
     setUsers(users)
@@ -56,22 +56,19 @@ const TeamManage = () => {
     setIsOpen(false);
   };
 
-  const handleModalClose = (selectedTeamsData) => {
-    console.log("selectedTeamsData:", selectedTeamsData);
-    console.log("Is selectedTeamsData null?", selectedTeamsData === null);
-    
+  const handleModalClose = async (selectedTeamsData) => {
+    // Fetch users again when the modal is closed
+    await fetchUsers();
+
     if (selectedTeamsData === null || selectedTeamsData.length === 0 || selectedTeamsData.some(teamData => teamData === 'なし')) {
       const updatedUsers = users.filter((user) => !user.team);
       setFilteredUsers(updatedUsers);
     } else {
-      console.log(selectedTeamsData);
       const updatedUsers = users.filter((user) =>
         selectedTeamsData.some((teamData) => teamData === user.team)
       );
       setFilteredUsers(updatedUsers);
-      console.log(updatedUsers);
     }
-  
     handleOk();
   };
   
@@ -79,7 +76,7 @@ const TeamManage = () => {
   const handleChooseUser = (userId) => {
     const updatedUsers = filteredUsers.map((user) => {
       if (user._id === userId) {
-        console.log(user)
+       
         return { ...user, chosen: !user.chosen };
       }
 
@@ -141,7 +138,7 @@ const TeamManage = () => {
           user_level: userData.user_level,
           del_flg: userData.del_flg
         }
-        console.log(userData);
+        
         await updateUser(userData._id, newUser);
         
 
@@ -162,7 +159,6 @@ const TeamManage = () => {
 
   const handleUserClick = (userId) => {
     handleChooseUser(userId);
-    console.log(userId);
   };
 
 
