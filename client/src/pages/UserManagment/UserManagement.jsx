@@ -14,7 +14,7 @@ const UserManagement = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const {userInfo} = useContext(AuthContext)
   
-  console.log(userInfo);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const UserManagement = () => {
   }, [userInfo, navigate]);
 
   
-
+  // get all users
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -39,6 +39,7 @@ const UserManagement = () => {
     }
   };
 
+  // create a new user
   const handleFormSubmit = async (values) => {
     try {
       setLoading(true);

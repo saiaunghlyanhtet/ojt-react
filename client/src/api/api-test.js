@@ -26,7 +26,7 @@ export const updateUser = async (userId, updatedUser) => {
 export const getUserById = async (userId) => {
   try {
     const response = await axios.get(`${baseURL}/users/${userId}`);
-    console.log(response.data);
+    
     return response.data;
   } catch (error) {
     throw new Error("Failed to get user");
@@ -53,7 +53,7 @@ export const getAllUsers = async () => {
 };
 
 const TEAM_API_URL =
-  "https://crudcrud.com/api/bd07e3eb54e64f8da17e9996a45a4c41";
+  "https://crudcrud.com/api/3d75a4b93bbe4792a012a6a0aeaba6a9";
 // Get all teams
 export const getAllTeams = async () => {
   try {

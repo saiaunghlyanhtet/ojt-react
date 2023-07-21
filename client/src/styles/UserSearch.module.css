@@ -21,4 +21,15 @@
   .usermanagement-table-main {
     margin-top: 20px;
   }
+
+  .table {
+    & thead {
+      background-color: #707070; /* Set the background color for the table header */
+      text-align: center; /* Center align the text in the table header */
+    }
+  
+    & tbody td:first-child {
+      text-align: right; /* Center align the text in the first column of the table body */
+    }
+  }
   

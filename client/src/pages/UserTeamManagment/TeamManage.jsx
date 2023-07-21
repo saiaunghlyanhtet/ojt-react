@@ -7,7 +7,7 @@ import TeamManagementModal from './TeamManagementModal';
 import { getAllUsers, updateUser, getAllTeams } from '../../api/api-test';
 import { Messages } from "../../data/message";
 
-const { Option } = Select;
+
 const { Search } = Input;
 
 const TeamManage = () => {
@@ -20,6 +20,7 @@ const TeamManage = () => {
   const [teamList, setTeamList] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
 
+  // fetch data when page is mounted
   useEffect(() => {
     if (!isDataFetched) {
       fetchTeamList();
@@ -28,6 +29,14 @@ const TeamManage = () => {
     }
   }, [isDataFetched]);
 
+  // set default team on page mount
+  useEffect(() => {
+    if (teamList.length > 0 && !selectedTeam) {
+      setSelectedTeam(teamList[0].teamName);
+    }
+  }, [teamList, selectedTeam]);
+
+  // fetch team data and return team list
   const fetchTeamList = async () => {
     try {
       const response = await getAllTeams();
@@ -37,6 +46,7 @@ const TeamManage = () => {
     }
   };
 
+  // fetch users and return users
   const fetchUsers = async () => {
     try {
       const response = await getAllUsers();
@@ -56,6 +66,7 @@ const TeamManage = () => {
     setIsOpen(false);
   };
 
+  // filter users data based on the selected team data and set users in the filtered users list
   const handleModalClose = async (selectedTeamsData) => {
     // Fetch users again when the modal is closed
     await fetchUsers();
@@ -67,12 +78,15 @@ const TeamManage = () => {
       const updatedUsers = users.filter((user) =>
         selectedTeamsData.some((teamData) => teamData === user.team)
       );
+      if(updatedUsers.length === 0) {
+        message.error(`There is no data related to this ${selectedTeamsData.join(',')}`);
+      }
       setFilteredUsers(updatedUsers);
     }
     handleOk();
   };
   
-
+  // chooser users to send to the second column
   const handleChooseUser = (userId) => {
     const updatedUsers = filteredUsers.map((user) => {
       if (user._id === userId) {
@@ -87,6 +101,7 @@ const TeamManage = () => {
     setFilteredUsers(updatedUsers);
   };
 
+  // chooser users to send to the first column
   const handleChooseUser1 = (userId) => {
     const updatedUsers = selectedUsers.map((user) => {
       if (user._id === userId) {
@@ -99,6 +114,7 @@ const TeamManage = () => {
     setSelectedUsers(updatedUsers);
   };
 
+  // move the chosen users to the second column
   const handleMoveToSelected = () => {
     const chosenUsers = filteredUsers.filter((user) => user.chosen);
     const updatedSelectedUsers = chosenUsers.map((user) => ({
@@ -110,6 +126,7 @@ const TeamManage = () => {
     setFilteredUsers(filteredUsers.filter((user) => !user.chosen));
   };
 
+  // move the choser users to the first column
   const handleMoveToUsers = () => {
     const movedUsers = selectedUsers.filter((user) => user.chosen);
     const updatedMovedUsers = movedUsers.map((user) => ({
@@ -124,6 +141,7 @@ const TeamManage = () => {
     setSelectedTeam(value);
   };
 
+  // update the list of users using their key and updated team information
   const handleUpdateUsers = async () => {
     try {
       const updatePromises = selectedUsers.map(async (user) => {
@@ -167,10 +185,12 @@ const TeamManage = () => {
     <Layout className="layout">
       <div className={styles['teamsetting-main']}>
         <div className={styles['teamsetting-container']}>
-          <div className={styles['teamsetting-search']}>
+          <Row>
+            <Col span={8} offset={6}>
+            <div className={styles['teamsetting-search']}>
             <Form.Item label="チーム名：">
               <Search
-                style={{ width: '350px' }}
+                style={{ width: '150px' }}
                 onSearch={handleModal}
                 enterButton
               />
@@ -184,26 +204,28 @@ const TeamManage = () => {
               />
             )}
           </div>
-          <Row>
-            <Col span={3} offset={14}>
-              <Select
-                className={styles['margin-bottom']}
-                value={selectedTeam}
-                onChange={handleTeamSelection}
-                style={{ width: 200 }}
-              >
-                <Option value="">None</Option>
-                {teamList && (
-                  teamList.map((team) => (
-                                      <Option key={team._id} value={team.teamName}>
-                                        {team.teamName}
-                                      </Option>
-                                    ))
-                )}
-              </Select>
             </Col>
           </Row>
+          <Row>
+            <Col span={2} offset={14}>
+              <div>チームに移動</div>
+              <Select
+        className={styles["margin-bottom"]}
+        value={selectedTeam}
+        onChange={handleTeamSelection}
+        style={{ width: 200 }}
+      >
+        {teamList.map((team) => (
+          <Select.Option key={team._id} value={team.teamName}>
+            {team.teamName}
+          </Select.Option>
+        ))}
+      </Select>
+            </Col>
+          </Row>
+          
           <div className={styles['teamsetting-box-main']}>
+         
             <div className={styles['teamsetting-box-container']}>
               <div className={styles['teamsetting-box']}>
                 {loading ? (

@@ -62,7 +62,7 @@ const Login = () => {
       handleLogin(userInformation);
 
       navigate("/menu");
-      console.log("login succ");
+      
       setMessage("ログイン成功");
 
       // Clear input fields

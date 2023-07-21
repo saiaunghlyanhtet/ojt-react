@@ -10,22 +10,22 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   const [teams, setTeams] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-
+  // fetch team data when page is mounted
   useEffect(() => {
     fetchTeams();
   }, []);
 
+  // fetch teams and return results
   const fetchTeams = async () => {
     try {
       const response = await getAllTeams();
       setTeams(response);
-      console.log(response);
     } catch (error) {
       console.log('Error:', error);
     }
   };
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 3;
 
   const filteredData = teams.filter((team) =>
     team.teamName.toLowerCase().includes(searchText.toLowerCase())
@@ -45,6 +45,7 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
     setErrorMessage('');
   };
 
+  // select teams and set teams data in selected teams list
   const handleCheckboxChange = (e, teamName) => {
     const { checked } = e.target;
 
@@ -62,24 +63,38 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   const renderData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentData = filteredData.slice(startIndex, endIndex);
-
-    
-    const tableData = [
-      {
-        key: 'none',
-        teamName: 'なし',
-        index: 1,
-      },
-      ...currentData.map((team, index) => ({
-        key: index + 2,
+  
+    let tableData;
+  
+    // Check if it's the first page
+    if (currentPage === 1) {
+      // Include "なし" entry at the beginning of the first page
+      tableData = [
+        {
+          key: 'none',
+          teamName: 'なし',
+          index: 1,
+        },
+        ...filteredData.slice(startIndex, endIndex - 1).map((team, index) => ({
+          key: index + 2,
+          teamName: team.teamName,
+          index: startIndex + index + 2,
+        })),
+      ];
+    } else {
+      // Exclude "なし" entry from other pages
+      tableData = filteredData.slice(startIndex - 1, endIndex - 1).map((team, index) => ({
+        key: startIndex + index,
         teamName: team.teamName,
-        index: startIndex + index + 2,
-      })),
-    ];
-
+        index: startIndex + index + 1,
+      }));
+    }
+  
     return tableData;
   };
+  
+  
+  
 
   const columns = [
     {
@@ -121,7 +136,7 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
         </div>
         <Table dataSource={renderData()} columns={columns} pagination={false} />
         <Row className={styles['margin-top']}>
-          <Col span={6} offset={18}>
+          <Col span={8} offset={16}>
             <div className="pagination">
               <Pagination
                 current={currentPage}

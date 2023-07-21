@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "../../styles/UserSearch.module.css";
 import UserSearchtable from "./UserSearchtable";
-import { getAllUsers, getUserById } from "../../api/api-test";
+import { getAllUsers, getUserById, getAllTeams } from "../../api/api-test";
 import { Button, Form, Input, Select } from "antd";
 import { AuthContext } from "../../utils/AuthContext";
 
@@ -13,11 +13,13 @@ const UserSearch = () => {
   const { userInfo } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [loginUser, setLoginUser] = useState(null);
+  const [teams, setTeams] = useState([]);
 
   useEffect(() => {
     fetchLoginUserData();
     fetchUsers();
-  }, []); // Empty dependency array, so this will run only once on component mount
+    fetchTeams();
+  }, []); 
 
   const fetchLoginUserData = async () => {
     try {
@@ -41,6 +43,15 @@ const UserSearch = () => {
       setLoading(false);
     }
   };
+
+  const fetchTeams = async () => {
+    try {
+      const teamsData = await getAllTeams();
+      setTeams(teamsData)
+    } catch (err) {
+      console.error("Error fetching teams", err)
+    }
+  }
 
   const handleSearch = (values) => {
     const { firstName, lastName, email, role, team } = values;
@@ -119,6 +130,23 @@ const UserSearch = () => {
             />
           </Form.Item>
 
+          <Form.Item label="チーム名：" name="team">
+            <Select
+              className={styles["usermanagement-input"]}
+             
+              disabled={loginUser?.user_level === "member"}
+              
+            >
+              <Option value="All">All</Option>
+                {teams && (
+                  teams.map((team) => (
+                                      <Option key={team._id} value={team.teamName}>
+                                        {team.teamName}
+                                      </Option>
+                                    ))
+                )}
+            </Select>
+          </Form.Item>
           <Form.Item label="ユーザー権限" name="role">
             <Select
               className={styles["usermanagement-input"]}
@@ -126,20 +154,6 @@ const UserSearch = () => {
                 { value: "admin", label: "Admin" },
                 { value: "super admin", label: "Super Admin" },
                 { value: "member", label: "Member" },
-              ]}
-              disabled={loginUser?.user_level === "member"}
-              
-            />
-          </Form.Item>
-
-          <Form.Item label="チーム名：" name="team">
-            <Select
-              className={styles["usermanagement-input"]}
-              options={[
-                { value: "All", label: "All" },
-                { value: "Team A", label: "A" },
-                { value: "Team B", label: "B" },
-                { value: "Team C", label: "C" },
               ]}
               disabled={loginUser?.user_level === "member"}
               

@@ -8,7 +8,12 @@ const UserSearchtable = ({ loading, data, loginUser }) => {
       title: "番号",
       dataIndex: "_id",
       key: "id",
-      render: (_, record, index) => index + 1,
+      render: (_, __, index) => {
+        const { current = 1, pageSize = 10 } = paginationConfig;
+        let currentRow = index + 1;
+        currentRow = (current - 1) * pageSize + index + 1;
+        return isNaN(currentRow) ? "-" : currentRow;
+      },
     },
     {
       title: "ユーザー名",
@@ -42,7 +47,7 @@ const UserSearchtable = ({ loading, data, loginUser }) => {
   ];
 
   const paginationConfig = {
-    pageSize: 10,
+    pageSize: 3,
   };
 
   // Filter data based on del_flg property
