@@ -54,6 +54,7 @@ const UserSearchtable = ({ loading, data, loginUser }) => {
         <Table
           columns={columns}
           dataSource={loginUser ? [loginUser] : []}
+          rowKey={record => record._id}
           loading={loading}
           pagination={paginationConfig}
           className={styles.table}
@@ -62,6 +63,7 @@ const UserSearchtable = ({ loading, data, loginUser }) => {
         <Table
           columns={columns}
           dataSource={filteredData}
+          rowKey={record => record._id}
           loading={loading}
           pagination={paginationConfig}
           className={styles.table}

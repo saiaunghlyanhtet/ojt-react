@@ -15,7 +15,7 @@ import {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const paginationConfig = {
-    pageSize: 5,
+    pageSize: 10,
 };
 
 const UserManagementTable = ({ data, loading, fetchUsers }) => {
@@ -199,9 +199,21 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
             key: "_id",
             render: (_, record, index) => {
                 const { current = 1, pageSize = 10 } = pagination;
-                const currentRow = (current - 1) * pageSize + index + 1;
+                let currentRow = index + 1;
+                
+                // If we have searched data, calculate the current row number based on the filtered data
+                if (searchedData && searchedData.length > 0) {
+                  const currentRowIndex = searchedData.findIndex(item => item._id === record._id);
+                  if (currentRowIndex !== -1) {
+                    currentRow = currentRowIndex + 1;
+                  }
+                } else {
+                  // If there's no search, calculate the current row number based on the current page and page size
+                  currentRow = (current - 1) * pageSize + index + 1;
+                }
+          
                 return isNaN(currentRow) ? "-" : currentRow;
-            },
+              },
 
 
 
@@ -259,6 +271,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
 
                     <Table
                         columns={columns}
+                        rowKey={record => record._id}
                         dataSource={filteredData}
                         loading={loading}
                         onChange={onChange}
