@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, Row, Col, Layout, message } from 'antd';
-import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
-import { Form, Input } from 'antd';
+import { DoubleRightOutlined, DoubleLeftOutlined, SearchOutlined } from '@ant-design/icons';
+import { Form} from 'antd';
 import styles from "../../styles/TeamManagmenet.module.css";
 import TeamManagementModal from './TeamManagementModal';
 import { getAllUsers, updateUser, getAllTeams } from '../../api/api-test';
 import { Messages } from "../../data/message";
 
 
-const { Search } = Input;
+
 
 const TeamManage = () => {
   const [users, setUsers] = useState([]);
@@ -179,21 +179,17 @@ const TeamManage = () => {
     handleChooseUser(userId);
   };
 
-
-
   return (
-    <Layout className="layout">
+    <Layout className='content'>
       <div className={styles['teamsetting-main']}>
         <div className={styles['teamsetting-container']}>
           <Row>
             <Col span={8} offset={6}>
             <div className={styles['teamsetting-search']}>
             <Form.Item label="チーム名：">
-              <Search
-                style={{ width: '150px' }}
-                onSearch={handleModal}
-                enterButton
-              />
+              <Button onClick={handleModal}>
+                <SearchOutlined/>
+              </Button>
             </Form.Item>
             {isOpen && (
               <TeamManagementModal
@@ -207,7 +203,7 @@ const TeamManage = () => {
             </Col>
           </Row>
           <Row>
-            <Col span={2} offset={14}>
+            <Col span={4} offset={13}>
               <div>チームに移動</div>
               <Select
         className={styles["margin-bottom"]}
@@ -225,8 +221,9 @@ const TeamManage = () => {
           </Row>
           
           <div className={styles['teamsetting-box-main']}>
-         
+          
             <div className={styles['teamsetting-box-container']}>
+            <div>ユーザー名:</div>
               <div className={styles['teamsetting-box']}>
                 {loading ? (
                   <div>Loading...</div>
@@ -259,14 +256,14 @@ const TeamManage = () => {
               <div
                 className={styles['teamsetting-btn-container']}
                 onClick={handleMoveToSelected}
-                disabled={!filteredUsers.some((user) => user.chosen)}
+                disabled={filteredUsers.length > 0 ? false : true}
               >
                 <DoubleRightOutlined className={styles['teamsetting-btn']} />
               </div>
               <div
                 className={styles['teamsetting-btn-container']}
                 onClick={handleMoveToUsers}
-                disabled={!selectedUsers.some((user) => user.chosen)}
+                disabled={selectedUsers.length > 0 ? false : true}
               >
                 <DoubleLeftOutlined className={styles['teamsetting-btn']} />
               </div>
@@ -297,6 +294,7 @@ const TeamManage = () => {
               </div>
             </div>
           </div>
+          <div className={styles['teamsetting-box-main']}>
           <div className={styles['center-button']}>
             <Button
               type="primary"
@@ -305,6 +303,7 @@ const TeamManage = () => {
             >
              決 定
             </Button>
+          </div>
           </div>
         </div>
       </div>

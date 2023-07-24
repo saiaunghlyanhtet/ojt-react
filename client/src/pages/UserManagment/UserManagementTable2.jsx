@@ -194,7 +194,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
 
     const columns = [
         {
-            title: "番号",
+            title: () => <div style={{ textAlign: 'center' }}>番号</div>,
             dataIndex: "_id",
             key: "_id",
             render: (_, record, index) => {
@@ -219,26 +219,26 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
 
         },
         {
-            title: "ユーザー名",
+            title: () => <div style={{ textAlign: 'center' }}>ユーザー名</div>,
             dataIndex: "user_name",
             key: "username",
             render: (_, record) => `${record.user_name} ${record.user_name_last}`,
         },
         {
-            title: "メールアドレス",
+            title: () => <div style={{ textAlign: 'center' }}>メールアドレス</div> ,
             dataIndex: "email",
             key: "email",
             ...getColumnSearchProps("email", "メールアドレス"),
         },
         {
-            title: "ユーザー権限",
+            title: () => <div style={{ textAlign: 'center' }}>ユーザー権限</div>,
             dataIndex: "user_level",
             key: "role",
             sorter: (a, b) => a.user_level.localeCompare(b.user_level),
             sortDirections: ["ascend", "descend"],
         },
         {
-            title: "操作",
+            title: () => <div style={{ textAlign: 'center' }}>操作</div>,
             key: "action",
             render: (_, record) => (
                 <Space size="middle">

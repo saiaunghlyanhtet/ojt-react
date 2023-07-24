@@ -1,71 +1,94 @@
+/* UserManagement.module.css */
+
+/* Table styles */
 .table {
-    & thead {
-      background-color: #707070; /* Set the background color for the table header */
-      text-align: center; /* Center align the text in the table header */
-    }
-  
-    & tbody td:first-child {
-      text-align: right; /* Center align the text in the first column of the table body */
-    }
-  }
-  
-  .usermanagement-form-main {
-    background: #eee;
-    padding: 45px 300px;
-  }
-  
-  .usermanagement-form-container {
-    background: #fff;
-    padding: 25px 100px;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .usermanagement-input {
-    width: 300px !important;
-  }
-  
-  .usermanagement-form-button-container {
-    text-align: center;
-  }
-  
-  .usermanagement-table-main {
-    margin-top: 20px;
-  }
-  .usermanagement-form-main {
-    background: #eee;
-    padding: 45px 300px;
-  }
-  
-  .usermanagement-form-container {
-    background: #fff;
-    padding: 25px 100px;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .usermanagement-input {
-    width: 300px !important;
-  }
-  
-  .usermanagement-form-button-container {
-    text-align: center;
-  }
-  
-  .usermanagement-table-main {
-    margin-top: 20px;
-  }
-  
-  .btn {
-      margin-right: 20px;
-  }
-  
-  .confrimation-message {
-    text-align: center;
-    font-size: 18px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px; /* Add some margin at the bottom of the table */
+}
+
+.table thead {
+  background-color: #707070;
+  text-align: center;
+  color: #fff; /* Set the text color for the table header */
+}
+
+.table tbody td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.table tbody td:first-child {
+  text-align: right;
+}
+
+/* Add responsive styles for the table body */
+@media screen and (max-width: 768px) {
+  .table {
+    font-size: 14px; /* Reduce the font size on smaller screens */
   }
 
-  .columnHeader {
-    text-align: center;
+  .table tbody td {
+    padding: 8px; /* Adjust the padding for smaller screens */
   }
-  
+}
+
+/* Container for the entire UserManagement component */
+.usermanagement-form-main {
+  background: #eee;
+  padding: 45px 20px; /* Adjust the padding for smaller screens */
+}
+
+/* Form container */
+.usermanagement-form-container {
+  background: #fff;
+  padding: 25px 20px; /* Adjust the padding for smaller screens */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Form input */
+.usermanagement-input {
+  width: 100%; /* Remove !important; to make it responsive */
+  max-width: 300px; /* Set a max-width to prevent excessive stretching */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Form button container */
+.usermanagement-form-button-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Table container */
+.usermanagement-table-main {
+  margin-top: 20px;
+}
+
+/* Button styles */
+.btn {
+  margin-right: 20px;
+}
+
+/* Confirmation message styles */
+.confrimation-message {
+  text-align: center;
+  font-size: 18px;
+}
+
+/* Center align the column headers */
+.columnHeader {
+  text-align: center;
+}
+
+/* Media query for small screens */
+@media screen and (max-width: 768px) {
+  .usermanagement-form-container {
+    padding: 25px 10px; /* Adjust the padding for smaller screens */
+  }
+
+  /* Add more responsive adjustments as needed */
+}

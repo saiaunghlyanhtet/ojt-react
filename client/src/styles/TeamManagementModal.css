@@ -1,0 +1,56 @@
+/* TeamManagementModal.css */
+.modal-content .center-content {
+    display: flex;
+    justify-content: center;
+  }
+
+/* Reduce font size for the table body */
+.modal-content .ant-table-tbody td {
+    font-size: 12px;
+  }
+  
+  /* Reduce padding for table body cells */
+  .modal-content .ant-table-cell {
+    padding: 4px 8px;
+  }
+  
+  /* Reduce size of the search box */
+  .modal-content .ant-input {
+    height: 24px;
+    font-size: 12px;
+    width: 150px; /* Adjust the width of the search box as needed */
+  }
+  
+  /* Reduce the width of the table container */
+  .modal-content .ant-table-content {
+   
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  
+  /* Adjust spacing for pagination */
+  .pagination {
+    margin-top: 8px;
+  }
+  
+  /* Reduce size of the button */
+  .center-button button {
+    height: 24px;
+    font-size: 12px;
+  }
+
+  /* TeamManagementModal.css */
+
+/* Add border to the table */
+.modal-content .ant-table {
+    border: 1px solid #ddd;
+  }
+  
+  /* Add border to table cells */
+  .modal-content .ant-table-cell {
+    border: 1px solid #ddd;
+  }
+  
+
+  
+  

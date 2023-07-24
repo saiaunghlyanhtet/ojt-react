@@ -86,8 +86,10 @@ const UserManagement = () => {
           <Form
             form={form}
             onFinish={handleFormSubmit}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
+            labelCol={{ span: 10 }}
+            wrapperCol={{ span: 14 }}
+            layout="horizontal"
+
           >
             <Form.Item
               label="ユーザー名[姓]"

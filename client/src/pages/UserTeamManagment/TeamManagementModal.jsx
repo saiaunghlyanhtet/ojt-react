@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Table, Button, Pagination, Input, Checkbox, Row, Col } from 'antd';
 import { getAllTeams } from '../../api/api-test';
 import styles from '../../styles/TeamManagmenet.module.css';
+import '../../styles/TeamManagementModal.css'
 
 const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -98,7 +99,7 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
 
   const columns = [
     {
-      title: '番号',
+      title: () => <div style={{ textAlign: 'center' }}>番号</div>,
       dataIndex: 'index',
       key: 'index',
       render: (text, record) => (
@@ -111,9 +112,10 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
       ),
     },
     {
-      title: 'チーム名',
+      title: () => <div style={{ textAlign: 'center' }}>チーム名</div>,
       dataIndex: 'teamName',
       key: 'teamName',
+      className: 'center',
     },
   ];
 
@@ -128,13 +130,22 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   return (
     <Modal open={isOpen} onCancel={closeModal} footer={null} title="チーム名検索">
       <div className="modal-content">
-        <div className={styles['search-container']}>
-          <label htmlFor="">チーム名</label>
-          <div className={styles['input-container']}>
-            <Input placeholder="Search" value={searchText} onChange={(e) => handleSearch(e)} />
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* Wrapped div with inline CSS to center the content */}
+          <div className={styles['search-container']}>
+            <label htmlFor="">チーム名: </label>
+            <div className={styles['input-container']}>
+              <Input
+                placeholder="検索条件入力"
+                value={searchText}
+                onChange={(e) => handleSearch(e)}
+              />
+            </div>
           </div>
         </div>
-        <Table dataSource={renderData()} columns={columns} pagination={false} />
+        
+        <Table dataSource={renderData()} columns={columns} pagination={false} className={styles.table} />
+         
         <Row className={styles['margin-top']}>
           <Col span={8} offset={16}>
             <div className="pagination">

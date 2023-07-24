@@ -1,85 +1,103 @@
+.table {
+  & thead {
+    background-color: #707070; /* Set the background color for the table header */
+    text-align: center; /* Center align the text in the table header */
+  }
+
+  & tbody td:first-child {
+    text-align: right; /* Center align the text in the first column of the table body */
+  }
+}
+
+.center {
+  text-align: center;
+}
+
 .teamsetting-main {
-    margin-top: 35px;
-  }
-  
-  .teamsetting-box {
-    border: 1px solid #000;
-    height: 400px;
-    width: 250px;
-    overflow-y: scroll;
-  }
-  
-  .teamsetting-btn {
-    background-color: #1677ff;
-    padding: 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 15px;
-  }
-  
-  .teamsetting-btn:hover {
-    background-color: #1677ffcd;
-  }
-  
-  .teamsetting-box-main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .teamsetting-btn-main {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-  
-  .teamsetting-search {
-    margin-left: 50px;
-  }
-  
-  .teamsetting-user {
-    cursor: pointer;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    user-select: none;
-  }
-  
-  .teamsetting-user:hover {
-    background-color: #eee;
-  }
-  
-  .teamsetting-user div {
-    margin-left: 10px;
-  }
-  
-  .center-button {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
+  margin-top: 35px;
+}
 
-  .margin-bottom {
-    margin-bottom: 16px;
-  }
+.teamsetting-box {
+  border: 1px solid #000;
+  height: 400px;
+  width: 225px;
+  overflow-y: scroll;
+}
 
-  .margin-top {
-    margin-top: 16px;
-  }
+.teamsetting-btn {
+  background-color: #1677ff;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+}
 
-  .search-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  
-  .input-container {
-    flex: 1;
-    width: 150px;
-  }
+.teamsetting-btn:hover {
+  background-color: #1677ffcd;
+}
 
-  .error-message { 
-    color: red;
-    text-align: center;
-  }
-  
-  
+.teamsetting-box-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teamsetting-btn-main {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.teamsetting-search {
+  margin-left: 50px;
+}
+
+.teamsetting-user {
+  cursor: pointer;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  user-select: none;
+}
+
+.teamsetting-user:hover {
+  background-color: #eee;
+}
+
+.teamsetting-user div {
+  margin-left: 10px;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.margin-bottom {
+  margin-bottom: 16px;
+}
+
+.margin-top {
+  margin-top: 16px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.input-container {
+  flex: 1;
+  width: 150px;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+.teamsetting-box-container {
+  display: flex;
+}
+
