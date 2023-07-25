@@ -147,7 +147,7 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
         <Table dataSource={renderData()} columns={columns} pagination={false} className={styles.table} />
          
         <Row className={styles['margin-top']}>
-          <Col span={8} offset={16}>
+          <Col lg={8} offset={16} sm={12} xs={12}>
             <div className="pagination">
               <Pagination
                 current={currentPage}
