@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Select, Row, Col, Layout, message } from 'antd';
 import { DoubleRightOutlined, DoubleLeftOutlined, SearchOutlined } from '@ant-design/icons';
-import { Form} from 'antd';
+import { Form } from 'antd';
 import styles from "../../styles/TeamManagmenet.module.css";
 import TeamManagementModal from './TeamManagementModal';
 import { getAllUsers, updateUser, getAllTeams } from '../../api/api-test';
 import { Messages } from "../../data/message";
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utils/AuthContext';
 
 
 
@@ -19,15 +21,23 @@ const TeamManage = () => {
   const [loading] = useState(false);
   const [teamList, setTeamList] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
+  const {userInfo} = useContext(AuthContext)
+  
+  
+  const navigate = useNavigate();
 
   // fetch data when page is mounted
   useEffect(() => {
-    if (!isDataFetched) {
-      fetchTeamList();
-      fetchUsers();
-      setIsDataFetched(true);
+    if(userInfo) {
+      if (!isDataFetched) {
+        fetchTeamList();
+        fetchUsers();
+        setIsDataFetched(true);
+      }
+    } else {
+      navigate('/')
     }
-  }, [isDataFetched]);
+  }, [isDataFetched, userInfo, navigate]);
 
   // set default team on page mount
   useEffect(() => {
@@ -78,19 +88,19 @@ const TeamManage = () => {
       const updatedUsers = users.filter((user) =>
         selectedTeamsData.some((teamData) => teamData === user.team)
       );
-      if(updatedUsers.length === 0) {
+      if (updatedUsers.length === 0) {
         message.error(`There is no data related to this ${selectedTeamsData.join(',')}`);
       }
       setFilteredUsers(updatedUsers);
     }
     handleOk();
   };
-  
+
   // chooser users to send to the second column
   const handleChooseUser = (userId) => {
     const updatedUsers = filteredUsers.map((user) => {
       if (user._id === userId) {
-       
+
         return { ...user, chosen: !user.chosen };
       }
 
@@ -156,9 +166,9 @@ const TeamManage = () => {
           user_level: userData.user_level,
           del_flg: userData.del_flg
         }
-        
+
         await updateUser(userData._id, newUser);
-        
+
 
       });
 
@@ -166,8 +176,8 @@ const TeamManage = () => {
       message.success(Messages.M008);
 
       fetchUsers();
-        setSelectedUsers([]);
-        setSelectedTeam('');
+      setSelectedUsers([]);
+      setSelectedTeam('');
     } catch (error) {
       // Handle error if any update operation fails
       console.error(error);
@@ -183,127 +193,136 @@ const TeamManage = () => {
     <Layout className='content'>
       <div className={styles['teamsetting-main']}>
         <div className={styles['teamsetting-container']}>
-          <Row>
-            <Col span={8} offset={6}>
-            <div className={styles['teamsetting-search']}>
-            <Form.Item label="チーム名：">
-              <Button onClick={handleModal}>
-                <SearchOutlined/>
-              </Button>
-            </Form.Item>
-            {isOpen && (
-              <TeamManagementModal
-                isOpen={isOpen}
-                closeModal={handleOk}
-                teams={users}
-                onCloseModal={handleModalClose}
-              />
-            )}
-          </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={4} offset={13}>
-              <div>チームに移動</div>
-              <Select
-        className={styles["margin-bottom"]}
-        value={selectedTeam}
-        onChange={handleTeamSelection}
-        style={{ width: 200 }}
-      >
-        {teamList.map((team) => (
-          <Select.Option key={team._id} value={team.teamName}>
-            {team.teamName}
-          </Select.Option>
-        ))}
-      </Select>
-            </Col>
-          </Row>
-          
-          <div className={styles['teamsetting-box-main']}>
-          
-            <div className={styles['teamsetting-box-container']}>
-            <div>ユーザー名:</div>
-              <div className={styles['teamsetting-box']}>
-                {loading ? (
-                  <div>Loading...</div>
-                ) : (
-                  <>
-                    {filteredUsers ? (
-                      filteredUsers.map((user, key) => (
-                        <div
-                          key={user._id}
-                          className={user.chosen ? 'chosen' : ''}
-                          style={{
-                            backgroundColor: user.chosen ? 'lightblue' : '',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => handleUserClick(user._id)}
-                        >
-                          {user.user_name} {user.user_name_last}, <br />
-                          {user.email}
-                          <hr />
-                        </div>
-                      ))
+
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={12} lg={12}>
+
+              <Form.Item label="チーム名：">
+                <Button onClick={handleModal}>
+                  <SearchOutlined />
+                </Button>
+              </Form.Item>
+              {isOpen && (
+                <TeamManagementModal
+                  isOpen={isOpen}
+                  closeModal={handleOk}
+                  teams={users}
+                  onCloseModal={handleModalClose}
+                />
+              )}
+              <br />
+              <div style={{ marginTop: 10 }}>
+                <div className={styles['teamsetting-box-container1']} >
+                  <div>ユーザー名:</div>
+                  <div className={styles['teamsetting-box']}>
+                    {loading ? (
+                      <div>Loading...</div>
                     ) : (
-                      <div>No data</div>
+                      <>
+                        {filteredUsers ? (
+                          filteredUsers.map((user, key) => (
+                            <div
+                              key={user._id}
+                              className={user.chosen ? 'chosen' : ''}
+                              style={{
+                                backgroundColor: user.chosen ? 'lightblue' : '',
+                                cursor: 'pointer',
+                              }}
+                              onClick={() => handleUserClick(user._id)}
+                            >
+                              {user.user_name} {user.user_name_last}, <br />
+                              {user.email}
+                              <hr />
+                            </div>
+                          ))
+                        ) : (
+                          <div>No data</div>
+                        )}
+                      </>
                     )}
-                  </>
-                )}
-              </div>
-            </div>
-            <div className={styles['teamsetting-btn-main']}>
-              <div
-                className={styles['teamsetting-btn-container']}
-                onClick={handleMoveToSelected}
-                disabled={filteredUsers.length > 0 ? false : true}
-              >
-                <DoubleRightOutlined className={styles['teamsetting-btn']} />
-              </div>
-              <div
-                className={styles['teamsetting-btn-container']}
-                onClick={handleMoveToUsers}
-                disabled={selectedUsers.length > 0 ? false : true}
-              >
-                <DoubleLeftOutlined className={styles['teamsetting-btn']} />
-              </div>
-            </div>
-            <div className={styles['teamsetting-box-container']}>
-              <div className={styles['teamsetting-box']}>
-                <div className={styles['teamsetting-user']}>
-                  {selectedUsers ? (
-                    selectedUsers.map((user) => (
-                      <div
-                        key={user._id}
-                        className={user.chosen ? 'chosen' : ''}
-                        style={{
-                          backgroundColor: user.chosen ? 'lightblue' : '',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => handleChooseUser1(user._id)}
-                      >
-                        {user.user_name} {user.user_name_last}, <br />
-                        {user.email}
-                        <hr />
-                      </div>
-                    ))
-                  ) : (
-                    <div>No data</div>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+
+            </Col>
+
+            <Col xs={24} sm={24} md={4} lg={4}>
+              <br />
+              <div className={styles['teamsetting-btn-main']}>
+                <div
+                  className={styles['teamsetting-btn-container']}
+                  onClick={handleMoveToSelected}
+                  disabled={filteredUsers.length > 0 ? false : true}
+                >
+                  <DoubleRightOutlined className={styles['teamsetting-btn']} />
+                </div>
+                <div
+                  className={styles['teamsetting-btn-container']}
+                  onClick={handleMoveToUsers}
+                  disabled={selectedUsers.length > 0 ? false : true}
+                >
+                  <DoubleLeftOutlined className={styles['teamsetting-btn']} />
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={24} sm={24} md={8} lg={8}>
+
+              <div>チームに移動</div>
+              <Select
+                className={styles["margin-bottom"]}
+                value={selectedTeam}
+                onChange={handleTeamSelection}
+                style={{ width: 225 }}
+              >
+                {teamList.map((team) => (
+                  <Select.Option key={team._id} value={team.teamName}>
+                    {team.teamName}
+                  </Select.Option>
+                ))}
+              </Select>
+
+              <div>
+                <br />
+                <div className={styles['teamsetting-box-container']}>
+                  <div className={styles['teamsetting-box']}>
+                    <div className={styles['teamsetting-user']}>
+                      {selectedUsers ? (
+                        selectedUsers.map((user) => (
+                          <div
+                            key={user._id}
+                            className={user.chosen ? 'chosen' : ''}
+                            style={{
+                              backgroundColor: user.chosen ? 'lightblue' : '',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => handleChooseUser1(user._id)}
+                          >
+                            {user.user_name} {user.user_name_last}, <br />
+                            {user.email}
+                            <hr />
+                          </div>
+                        ))
+                      ) : (
+                        <div>No data</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+
           <div className={styles['teamsetting-box-main']}>
-          <div className={styles['center-button']}>
-            <Button
-              type="primary"
-              onClick={handleUpdateUsers}
-              disabled={!selectedTeam || selectedUsers.length === 0}
-            >
-             決 定
-            </Button>
-          </div>
+            <div className={styles['center-button']}>
+              <Button
+                type="primary"
+                onClick={handleUpdateUsers}
+                disabled={!selectedTeam || selectedUsers.length === 0}
+              >
+                決 定
+              </Button>
+            </div>
           </div>
         </div>
       </div>

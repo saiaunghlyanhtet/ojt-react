@@ -101,3 +101,136 @@
   display: flex;
 }
 
+/* ... existing styles ... */
+
+/* New styles */
+.teamsetting-main {
+  margin-top: 35px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.teamsetting-box {
+  border: 1px solid #000;
+  height: 400px;
+  width: 225px;
+  overflow-y: scroll;
+}
+
+.teamsetting-btn {
+  background-color: #1677ff;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.teamsetting-btn:hover {
+  background-color: #1677ffcd;
+}
+
+.teamsetting-box-main {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.teamsetting-box-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.teamsetting-box-container1 {
+  display: flex;
+  flex-direction: row;
+}
+
+.teamsetting-btn-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+}
+
+/* Add media query for screen sizes smaller than 768px */
+@media (max-width: 767px) {
+  .teamsetting-container {
+    /* Adjust the styles for the main container on smaller screens */
+    padding: 10px;
+  }
+
+  .teamsetting-box-main {
+    /* Adjust the styles for the main boxes on smaller screens */
+    flex-direction: column;
+  }
+
+  .teamsetting-box {
+    /* Adjust the styles for the user lists on smaller screens */
+    width: 100%;
+  }
+
+  .teamsetting-box-container1 {
+    flex-direction: column;
+  }
+
+  .teamsetting-search {
+    /* Adjust the styles for the search container on smaller screens */
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .teamsetting-search .ant-form-item {
+    /* Adjust the styles for the search form item on smaller screens */
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .teamsetting-btn-main .ant-select {
+    /* Adjust the styles for the select box on smaller screens */
+    width: 100%;
+  }
+
+  .teamsetting-btn-main {
+    /* Adjust the styles for the buttons container on even smaller screens */
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+}
+
+/* Add media query for screen sizes smaller than 480px */
+@media (max-width: 479px) {
+  .teamsetting-container {
+    /* Adjust the styles for the main container on smaller screens */
+    padding: 10px;
+  }
+
+  .teamsetting-box-main {
+    /* Adjust the styles for the main boxes on smaller screens */
+    flex-direction: column;
+  }
+
+  .teamsetting-box {
+    /* Adjust the styles for the user lists on smaller screens */
+    width: 90%;
+  }
+  .teamsetting-main {
+    /* Further adjust the styles for the main container on even smaller screens */
+    padding: 5px;
+  }
+
+  .teamsetting-btn-main {
+    /* Adjust the styles for the buttons container on even smaller screens */
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .teamsetting-btn {
+    /* Reduce the padding for the arrow buttons on even smaller screens */
+    padding: 10px;
+  }
+}
