@@ -53,7 +53,7 @@ export const getAllUsers = async () => {
 };
 
 const TEAM_API_URL =
-  "https://crudcrud.com/api/aa8d2542ec1649d38eb08edda4dc306f";
+  "https://crudcrud.com/api/8acc05c076eb4fba9a31db720a5c114c";
 // Get all teams
 export const getAllTeams = async () => {
   try {

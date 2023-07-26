@@ -3,9 +3,10 @@ import styles from "../../styles/UserSearch.module.css";
 import { Table } from "antd";
 
 const UserSearchtable = ({ loading, data, loginUser }) => {
+  
   const columns = [
     {
-      title: "番号",
+      title: () => <div style={{ textAlign: 'center' }}>番号</div>,
       dataIndex: "_id",
       key: "id",
       render: (_, __, index) => {
@@ -16,38 +17,38 @@ const UserSearchtable = ({ loading, data, loginUser }) => {
       },
     },
     {
-      title: "ユーザー名",
+      title: () => <div style={{ textAlign: 'center' }}>ユーザー名</div>,
       dataIndex: "user_name",
       key: "username",
       render: (_, record) => `${record.user_name} ${record.user_name_last}`,
-      sorter: (a, b) => a.user_name.localeCompare(b.user_name),
+      sorter: (a, b) => a?.user_name.localeCompare(b?.user_name),
       sortDirections: ["ascend", "descend"],
     },
     {
-      title: "メールアドレス",
+      title: <div style={{ textAlign: 'center' }}>メールアドレス</div>,
       dataIndex: "email",
       key: "email",
-      sorter: (a, b) => a.email.localeCompare(b.email),
+      sorter: (a, b) => a?.email.localeCompare(b?.email),
       sortDirections: ["ascend", "descend"],
     },
     {
-      title: "ユーザー権限",
+      title: () => <div style={{ textAlign: 'center' }}>ユーザー権限</div>,
       dataIndex: "user_level",
       key: "role",
-      sorter: (a, b) => a.user_level.localeCompare(b.user_level),
+      sorter: (a, b) => a?.user_level.localeCompare(b?.user_level),
       sortDirections: ["ascend", "descend"],
     },
     {
-      title: "チーム名",
+      title: () => <div style={{ textAlign: 'center' }}>チーム名</div>,
       dataIndex: "team",
       key: "team",
-      sorter: (a, b) => a.team.localeCompare(b.team),
+      sorter: (a, b) => a?.team?.localeCompare(b?.team),
       sortDirections: ["ascend", "descend"],
     },
   ];
 
   const paginationConfig = {
-    pageSize: 3,
+    pageSize: 10,
   };
 
   // Filter data based on del_flg property

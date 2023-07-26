@@ -67,7 +67,6 @@ const UserManagement = () => {
       };
 
       const createdUser = await createUser(newUserData);
-      console.log("User created:", createdUser);
       message.success(Messages.M006);
       fetchUsers();
       form.resetFields();
@@ -121,7 +120,7 @@ const UserManagement = () => {
               rules={[{ required: true, message: Messages.M005 }]}
             >
               <Select
-                className={styles["usermanagement-input"]}
+                
                 options={[
                   {
                     value: "admin",

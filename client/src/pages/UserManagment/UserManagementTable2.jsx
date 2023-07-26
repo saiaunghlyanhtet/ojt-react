@@ -89,10 +89,9 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                 update_user: userInfo !== null ? userInfo.user_id : null,
                 update_datetime: new Date().toISOString(),
             };
-            console.log(userData);
+            
             const editUser = await updateUser(modalState.selectedUserId, userData);
-            console.log("editdata", editUser);
-
+           
             message.success(Messages.M008);
             handleModalCancel();
             fetchUsers();
@@ -121,7 +120,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
 
 
     const onChange = useCallback((pagination, filters, sorter) => {
-        console.log("params", sorter);
+       
         setPagination(pagination);
     }, []);
 
@@ -300,14 +299,14 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                                 name="firstName"
                                 rules={[{ required: true, message: Messages.M013 }]}
                             >
-                                <Input className={styles["usermanagement-input"]} disabled />
+                                <Input  disabled />
                             </Form.Item>
                             <Form.Item
                                 label="ユーザー名[名]"
                                 name="lastName"
                                 rules={[{ required: true, message: Messages.M014 }]}
                             >
-                                <Input className={styles["usermanagement-input"]} disabled />
+                                <Input  disabled />
                             </Form.Item>
                             <Form.Item
                                 label="メールアドレス"
@@ -317,7 +316,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                                     { pattern: emailRegex, message: Messages.M004 },
                                 ]}
                             >
-                                <Input className={styles["usermanagement-input"]} />
+                                <Input  />
                             </Form.Item>
                             <Form.Item
                                 label="ユーザー権限"
@@ -325,7 +324,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                                 rules={[{ required: true, message: Messages.M005 }]}
                             >
                                 <Select
-                                    className={styles["usermanagement-input"]}
+                                    
                                     options={[
                                         {
                                             value: "admin",

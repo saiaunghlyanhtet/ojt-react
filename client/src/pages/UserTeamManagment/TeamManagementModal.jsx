@@ -26,7 +26,7 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
     }
   };
 
-  const itemsPerPage = 3;
+  const itemsPerPage = 6;
 
   const filteredData = teams.filter((team) =>
     team.teamName.toLowerCase().includes(searchText.toLowerCase())
@@ -67,36 +67,42 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   
     let tableData;
   
-    // Check if it's the first page
-    if (currentPage === 1) {
-      // Include "なし" entry at the beginning of the first page
-      tableData = [
-        {
-          key: 'none',
-          teamName: 'なし',
-          index: 1,
-        },
-        ...filteredData.slice(startIndex, endIndex - 1).map((team, index) => ({
-          key: index + 2,
-          teamName: team.teamName,
-          index: startIndex + index + 2,
-        })),
-      ];
-    } else {
-      // Exclude "なし" entry from other pages
-      tableData = filteredData.slice(startIndex - 1, endIndex - 1).map((team, index) => ({
-        key: startIndex + index,
+    // If there is searchText, exclude "なし" entry from all pages
+    if (searchText) {
+      tableData = filteredData.slice(startIndex, endIndex).map((team, index) => ({
+        key: startIndex + index + 1,
         teamName: team.teamName,
         index: startIndex + index + 1,
       }));
+    } else {
+      // If it's the first page, include "なし" entry
+      if (currentPage === 1) {
+        tableData = [
+          {
+            key: 'none',
+            teamName: 'なし',
+            index: 1,
+          },
+          ...filteredData.slice(startIndex, endIndex - 1).map((team, index) => ({
+            key: index + 2,
+            teamName: team.teamName,
+            index: startIndex + index + 2,
+          })),
+        ];
+      } else {
+        // Exclude "なし" entry from other pages
+        tableData = filteredData.slice(startIndex - 1, endIndex - 1).map((team, index) => ({
+          key: startIndex + index,
+          teamName: team.teamName,
+          index: startIndex + index + 1,
+        }));
+      }
     }
   
     return tableData;
   };
   
   
-  
-
   const columns = [
     {
       title: () => <div style={{ textAlign: 'center' }}>番号</div>,

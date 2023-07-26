@@ -10,8 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../utils/AuthContext';
 
 
-
-
 const TeamManage = () => {
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -89,7 +87,7 @@ const TeamManage = () => {
         selectedTeamsData.some((teamData) => teamData === user.team)
       );
       if (updatedUsers.length === 0) {
-        message.error(`There is no data related to this ${selectedTeamsData.join(',')}`);
+        message.error(Messages.M018);
       }
       setFilteredUsers(updatedUsers);
     }
@@ -115,7 +113,6 @@ const TeamManage = () => {
   const handleChooseUser1 = (userId) => {
     const updatedUsers = selectedUsers.map((user) => {
       if (user._id === userId) {
-        console.log(user);
         return { ...user, chosen: !user.chosen };
       }
       return user;
@@ -155,7 +152,6 @@ const TeamManage = () => {
   const handleUpdateUsers = async () => {
     try {
       const updatePromises = selectedUsers.map(async (user) => {
-        console.log(user);
         const { chosen, ...rest } = user;
         const userData = { ...rest, team: selectedTeam };
         const newUser = {
@@ -191,6 +187,7 @@ const TeamManage = () => {
 
   return (
     <Layout className='content'>
+     
       <div className={styles['teamsetting-main']}>
         <div className={styles['teamsetting-container']}>
 
@@ -198,7 +195,7 @@ const TeamManage = () => {
             <Col xs={24} sm={24} md={12} lg={12}>
 
               <Form.Item label="チーム名：">
-                <Button onClick={handleModal}>
+                <Button onClick={handleModal} style={{backgroundColor : 'blue'}}>
                   <SearchOutlined />
                 </Button>
               </Form.Item>
@@ -210,6 +207,8 @@ const TeamManage = () => {
                   onCloseModal={handleModalClose}
                 />
               )}
+              <br />
+              <br />
               <br />
               <div style={{ marginTop: 10 }}>
                 <div className={styles['teamsetting-box-container1']} >
@@ -225,7 +224,7 @@ const TeamManage = () => {
                               key={user._id}
                               className={user.chosen ? 'chosen' : ''}
                               style={{
-                                backgroundColor: user.chosen ? 'lightblue' : '',
+                                backgroundColor: user.chosen ? 'lightblue' : 'white',
                                 cursor: 'pointer',
                               }}
                               onClick={() => handleUserClick(user._id)}
@@ -248,6 +247,8 @@ const TeamManage = () => {
 
             <Col xs={24} sm={24} md={4} lg={4}>
               <br />
+              <br />
+              <br />
               <div className={styles['teamsetting-btn-main']}>
                 <div
                   className={styles['teamsetting-btn-container']}
@@ -267,7 +268,8 @@ const TeamManage = () => {
             </Col>
 
             <Col xs={24} sm={24} md={8} lg={8}>
-
+              <br />
+                          <br />
               <div>チームに移動</div>
               <Select
                 className={styles["margin-bottom"]}
