@@ -10,6 +10,7 @@ import UserManagementTable from "./UserManagementTable2";
 const UserManagement = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchState, setSearchState] = useState(false);
   const [form] = Form.useForm(); // Create a form instance
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const {userInfo} = useContext(AuthContext)
@@ -25,6 +26,9 @@ const UserManagement = () => {
     }
   }, [userInfo, navigate]);
 
+  const updateSearchState = (state) => {
+    setSearchState(state);
+  };
   
   // get all users
   const fetchUsers = async () => {
@@ -70,6 +74,8 @@ const UserManagement = () => {
       message.success(Messages.M006);
       fetchUsers();
       form.resetFields();
+      setSearchState(false);
+      
     } catch (error) {
       message.success(Messages.M007);
       console.error("Error creating user:", error);
@@ -151,7 +157,8 @@ const UserManagement = () => {
             data={userData}
             loading={loading}
             fetchUsers={fetchUsers}
-            
+            searchState={searchState}
+            setSearchState={updateSearchState}
           />
         </div>
       </div>

@@ -16,6 +16,7 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
     fetchTeams();
   }, []);
 
+  
   // fetch teams and return results
   const fetchTeams = async () => {
     try {
@@ -67,15 +68,18 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   
     let tableData;
   
-    // If there is searchText, exclude "なし" entry from all pages
-    if (searchText) {
+    // Check if the searchText is "nashi"
+    const isNashiSearch = searchText.trim().toLowerCase() === 'なし';
+  
+    // If there is searchText and it's not "nashi", exclude "なし" entry from all pages
+    if (searchText && !isNashiSearch) {
       tableData = filteredData.slice(startIndex, endIndex).map((team, index) => ({
         key: startIndex + index + 1,
         teamName: team.teamName,
         index: startIndex + index + 1,
       }));
     } else {
-      // If it's the first page, include "なし" entry
+      // Include "なし" entry along with other data at the start of the modal load
       if (currentPage === 1) {
         tableData = [
           {
@@ -91,8 +95,8 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
         ];
       } else {
         // Exclude "なし" entry from other pages
-        tableData = filteredData.slice(startIndex - 1, endIndex - 1).map((team, index) => ({
-          key: startIndex + index,
+        tableData = filteredData.slice(startIndex, endIndex).map((team, index) => ({
+          key: startIndex + index + 1,
           teamName: team.teamName,
           index: startIndex + index + 1,
         }));
@@ -101,6 +105,8 @@ const TeamManagementModal = ({ isOpen, closeModal, onCloseModal }) => {
   
     return tableData;
   };
+  
+  
   
   
   const columns = [

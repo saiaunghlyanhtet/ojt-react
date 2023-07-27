@@ -210,7 +210,7 @@ const TeamManage = () => {
               <br />
               <br />
               <br />
-              <div style={{ marginTop: 10 }}>
+              <div style={{ marginTop: 15 }}>
                 <div className={styles['teamsetting-box-container1']} >
                   <div>ユーザー名:</div>
                   <div className={styles['teamsetting-box']}>
@@ -226,6 +226,8 @@ const TeamManage = () => {
                               style={{
                                 backgroundColor: user.chosen ? 'lightblue' : 'white',
                                 cursor: 'pointer',
+                                paddingLeft: '10px',
+                                marginTop: '10px',
                               }}
                               onClick={() => handleUserClick(user._id)}
                             >

@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const API_URL = 'https://crudcrud.com/api/73662c68b884415195fd27d9816772fe'
+const API_URL = 'https://crudcrud.com/api/532a6a87821d451885711f4faf446fe9'
 
 // Create users
 app.post("/api/users", async (req, res) => {

@@ -18,7 +18,7 @@ const paginationConfig = {
     pageSize: 10,
 };
 
-const UserManagementTable = ({ data, loading, fetchUsers }) => {
+const UserManagementTable = ({ data, loading, fetchUsers, searchState, setSearchState }) => {
     const form = Form.useForm()[0];
     const searchInput = useRef(null);
     const [modalState, setModalState] = useState({
@@ -32,6 +32,10 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
     const [searchedColumn] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [pagination, setPagination] = useState(paginationConfig);
+    const [sortConfig, setSortConfig] = useState({
+        sortField: null,
+        sortOrder: null,
+    });
     const { userInfo } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -39,18 +43,27 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
         if (userInfo === null) {
             navigate("/");
         }
-    }, [userInfo, navigate]);
+    }, [userInfo, navigate, searchState]);
+
+
+
+
 
     const handleSearch = useCallback(() => {
+
         const searchDataResult = searchData(data, searchText);
+
         setSearchedData(searchDataResult);
         setSearchModalVisible(false);
         setIsSearching(false);
+        setSearchState(true)
+
     }, [data, searchText]);
 
     const handleSearchModalVisible = () => {
         setSearchModalVisible(!searchModalVisible);
         setIsSearching(!isSearching);
+
     };
 
     const handleReset = useCallback((clearFilters) => {
@@ -59,13 +72,14 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
         setSearchedData(null);
     }, []);
 
+
     const handleModalOk = useCallback(() => {
         if (modalState.selectedUserId) {
             handleDeleteUser(form, data, modalState.selectedUserId, userInfo, fetchUsers);
             setModalState((prevState) => ({
                 ...prevState,
                 deleteModalShow: false,
-              }));
+            }));
         }
     }, [form, data, modalState.selectedUserId, userInfo, fetchUsers]);
 
@@ -78,6 +92,14 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
     }, [setModalState]);
 
     const handleEdit = useCallback(async () => {
+
+        const emailFieldError = form.getFieldError('email');
+
+        if (emailFieldError && emailFieldError.length > 0) {
+
+            return;
+
+        }
         try {
             const values = await form.validateFields();
             const userData = {
@@ -89,9 +111,28 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                 update_user: userInfo !== null ? userInfo.user_id : null,
                 update_datetime: new Date().toISOString(),
             };
-            
-            const editUser = await updateUser(modalState.selectedUserId, userData);
-           
+
+            // Check if the email is valid using the emailRegex pattern
+            if (!emailRegex.test(userData.email)) {
+                message.error(Messages.M004); // Show error message for invalid email
+                return;
+            }
+
+            // Check if the email already exists, except for the user being edited
+            const existingUser = data.find(
+                (user) => user.email === userData.email && user._id !== modalState.selectedUserId
+            );
+
+            if (existingUser) {
+                message.error(Messages.M003); // Show error message for existing email
+                return;
+            }
+
+            if (emailRegex.test(userData.email) && !existingUser) {
+                const editUser = await updateUser(modalState.selectedUserId, userData);
+            }
+
+
             message.success(Messages.M008);
             handleModalCancel();
             fetchUsers();
@@ -99,7 +140,8 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
             message.error(Messages.M009);
             console.error("Error updating user:", error);
         }
-    }, [form, fetchUsers, modalState.selectedUserId, handleModalCancel, userInfo]);
+    }, [form, data, modalState.selectedUserId, handleModalCancel, userInfo]);
+
 
     const deleteshowModal = useCallback((userId) => {
         setModalState((prevState) => ({
@@ -120,9 +162,46 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
 
 
     const onChange = useCallback((pagination, filters, sorter) => {
-       
+        if (data !== filteredData) {
+            // If the 'data' prop is updated and the filteredData is different from the original data
+            setSearchedData(data);
+            setPagination(pagination);
+            return;
+        }
+
+        // Update the sorting configuration
+        setSortConfig({
+            sortField: sorter.field,
+            sortOrder: sorter.order,
+        });
+
+        // Custom sorting for "User Level" column
+        if (sorter.field === "role") {
+            const sortedData = data.slice().sort((a, b) => {
+                const order = sorter.order === "ascend" ? 1 : -1;
+                return a.user_level.localeCompare(b.user_level) * order;
+            });
+
+            // If you have searched data, apply sorting to it
+            if (searchedData && searchedData.length > 0) {
+                const searchedSortedData = searchedData.slice().sort((a, b) => {
+                    const order = sorter.order === "ascend" ? 1 : -1;
+                    return a.user_level.localeCompare(b.user_level) * order;
+                });
+                setSearchedData(searchedSortedData);
+            }
+
+            // Update the filteredData state with the sorted data
+
+        } else {
+            // Your existing sorting logic for other columns
+            // ...
+        }
+
+        // Update the pagination
         setPagination(pagination);
-    }, []);
+    }, [data, searchedData, filteredData]);
+
 
     const getColumnSearchProps = useCallback(
         (dataIndex, placeholder) => ({
@@ -140,6 +219,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                         onChange={(e) => {
                             setSelectedKeys(e.target.value ? [e.target.value] : []);
                             setSearchText(e.target.value);
+
                         }}
                         onPressEnter={() =>
                             handleSearch(selectedKeys, confirm, dataIndex)
@@ -199,20 +279,20 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
             render: (_, record, index) => {
                 const { current = 1, pageSize = 10 } = pagination;
                 let currentRow = index + 1;
-                
+
                 // If we have searched data, calculate the current row number based on the filtered data
                 if (searchedData && searchedData.length > 0) {
-                  const currentRowIndex = searchedData.findIndex(item => item._id === record._id);
-                  if (currentRowIndex !== -1) {
-                    currentRow = currentRowIndex + 1;
-                  }
+                    const currentRowIndex = searchedData.findIndex(item => item._id === record._id);
+                    if (currentRowIndex !== -1) {
+                        currentRow = currentRowIndex + 1;
+                    }
                 } else {
-                  // If there's no search, calculate the current row number based on the current page and page size
-                  currentRow = (current - 1) * pageSize + index + 1;
+                    // If there's no search, calculate the current row number based on the current page and page size
+                    currentRow = (current - 1) * pageSize + index + 1;
                 }
-          
+
                 return isNaN(currentRow) ? "-" : currentRow;
-              },
+            },
 
 
 
@@ -222,12 +302,14 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
             dataIndex: "user_name",
             key: "username",
             render: (_, record) => `${record.user_name} ${record.user_name_last}`,
+            width: 400,
         },
         {
-            title: () => <div style={{ textAlign: 'center' }}>メールアドレス</div> ,
+            title: () => <div style={{ textAlign: 'center' }}>メールアドレス</div>,
             dataIndex: "email",
             key: "email",
             ...getColumnSearchProps("email", "メールアドレス"),
+            width: 400,
         },
         {
             title: () => <div style={{ textAlign: 'center' }}>ユーザー権限</div>,
@@ -253,8 +335,13 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
             ),
         },
     ];
+    var filteredData = []
+    if (searchState) {
+        filteredData = searchedData
+    } else {
+        filteredData = data?.filter((user) => user.del_flg === "0")
+    }
 
-    const filteredData = searchedData || data?.filter((user) => user.del_flg === "0");
 
     return (
         <>
@@ -263,7 +350,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                     <Row>
                         <Col span={3} offset={21}>
                             <small style={{ color: "green" }}>
-                                Total: {filteredData.length} Rows
+                                Total: {filteredData?.length} Rows
                             </small>
                         </Col>
                     </Row>
@@ -294,19 +381,19 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                     >
                         <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                             <Form.Item
-                                
+
                                 label="ユーザー名[姓]"
                                 name="firstName"
                                 rules={[{ required: true, message: Messages.M013 }]}
                             >
-                                <Input  disabled />
+                                <Input disabled />
                             </Form.Item>
                             <Form.Item
                                 label="ユーザー名[名]"
                                 name="lastName"
                                 rules={[{ required: true, message: Messages.M014 }]}
                             >
-                                <Input  disabled />
+                                <Input disabled />
                             </Form.Item>
                             <Form.Item
                                 label="メールアドレス"
@@ -316,7 +403,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                                     { pattern: emailRegex, message: Messages.M004 },
                                 ]}
                             >
-                                <Input  />
+                                <Input />
                             </Form.Item>
                             <Form.Item
                                 label="ユーザー権限"
@@ -324,7 +411,7 @@ const UserManagementTable = ({ data, loading, fetchUsers }) => {
                                 rules={[{ required: true, message: Messages.M005 }]}
                             >
                                 <Select
-                                    
+
                                     options={[
                                         {
                                             value: "admin",
