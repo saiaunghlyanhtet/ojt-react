@@ -32,6 +32,7 @@ const UserManagementTable = ({ data, loading, fetchUsers, searchState, setSearch
     const [searchedColumn] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [pagination, setPagination] = useState(paginationConfig);
+    const [sorted, setSorted] = useState(false)
     const [sortConfig, setSortConfig] = useState({
         sortField: null,
         sortOrder: null,
@@ -42,6 +43,10 @@ const UserManagementTable = ({ data, loading, fetchUsers, searchState, setSearch
     useEffect(() => {
         if (userInfo === null) {
             navigate("/");
+        } else {
+            if (!searchState) {
+                setSearchedData(null)
+            }
         }
     }, [userInfo, navigate, searchState]);
 
@@ -162,45 +167,9 @@ const UserManagementTable = ({ data, loading, fetchUsers, searchState, setSearch
 
 
     const onChange = useCallback((pagination, filters, sorter) => {
-        if (data !== filteredData) {
-            // If the 'data' prop is updated and the filteredData is different from the original data
-            setSearchedData(data);
-            setPagination(pagination);
-            return;
-        }
-
-        // Update the sorting configuration
-        setSortConfig({
-            sortField: sorter.field,
-            sortOrder: sorter.order,
-        });
-
-        // Custom sorting for "User Level" column
-        if (sorter.field === "role") {
-            const sortedData = data.slice().sort((a, b) => {
-                const order = sorter.order === "ascend" ? 1 : -1;
-                return a.user_level.localeCompare(b.user_level) * order;
-            });
-
-            // If you have searched data, apply sorting to it
-            if (searchedData && searchedData.length > 0) {
-                const searchedSortedData = searchedData.slice().sort((a, b) => {
-                    const order = sorter.order === "ascend" ? 1 : -1;
-                    return a.user_level.localeCompare(b.user_level) * order;
-                });
-                setSearchedData(searchedSortedData);
-            }
-
-            // Update the filteredData state with the sorted data
-
-        } else {
-            // Your existing sorting logic for other columns
-            // ...
-        }
-
-        // Update the pagination
         setPagination(pagination);
-    }, [data, searchedData, filteredData]);
+        setSorted(true);
+    }, []);
 
 
     const getColumnSearchProps = useCallback(
@@ -270,6 +239,8 @@ const UserManagementTable = ({ data, loading, fetchUsers, searchState, setSearch
         }),
         [handleSearch, handleReset, searchedColumn, searchText]
     );
+
+
 
     const columns = [
         {
